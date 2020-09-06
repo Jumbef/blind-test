@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Jumbef's blind test</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <script>
+      const { ipcRenderer } = require('electron')
+      ipcRenderer.on('log', (event, message) => {
+        console.log(message) // Prints 'whoooooooh!'
+      })
+    </script>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+    We are using node <script>document.write(process.versions.node)</script>,
+    Chrome <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+    <hr />
+    <audio controls autoplay ontimeupdate="console.log('progress')">
+      <source src="https://jumbef.net/tdw/musique/Light%20be%20born%20out%20of%20dark/01%20Welcom%20in%20a%20dark%20world.mp3" type="audio/mpeg" />
+      <source src="file:///absolute/path/to/file.mp3" type="audio/mpeg" />
+      <source src="file:///absolute/path/to/file.ogg" type="audio/ogg" />
+      <source src="file:///absolute/path/to/file.flac" type="audio/flac" />
+      <source src="file:///absolute/path/to/file.wav" type="audio/wav" />
+    </audio>
+    </body>
+</html>
