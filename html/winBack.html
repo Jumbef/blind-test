@@ -8,7 +8,7 @@
     <script>
       const { ipcRenderer } = require('electron')
       ipcRenderer.on('log', (event, message) => {
-        console.log(message) // Prints 'whoooooooh!'
+        console.log(message)
       })
     </script>
   </head>
@@ -18,7 +18,9 @@
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
     <hr>
-    <input type="button" value="Close all" onclick="ipcRenderer.send('close-app')">
-    <input type="button" value="Re-open Frontstage window" onclick="ipcRenderer.send('open-front')">
+    <input type="button" value="Exit" onclick="ipcRenderer.send('exit')">
+    <input type="button" value="Load" onclick="ipcRenderer.send('load','https://jumbef.net/tdw/musique/Light%20be%20born%20out%20of%20dark/01%20Welcom%20in%20a%20dark%20world.mp3')">
+    <input type="button" value="PLay" onclick="ipcRenderer.send('play')">
+    <input type="button" value="Stop" onclick="ipcRenderer.send('pause')">
   </body>
 </html>

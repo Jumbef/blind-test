@@ -8,7 +8,17 @@
     <script>
       const { ipcRenderer } = require('electron')
       ipcRenderer.on('log', (event, message) => {
-        console.log(message) // Prints 'whoooooooh!'
+        console.log(message)
+      })
+      ipcRenderer.on('load', (event, message) => {
+        console.log(message)
+        document.getElementById('audio').setAttribute('src',message)
+      })
+      ipcRenderer.on('play', (event, message) => {
+        document.getElementById('audio').play()
+      })
+      ipcRenderer.on('pause', (event, message) => {
+        document.getElementById('audio').pause()
       })
     </script>
   </head>
@@ -18,12 +28,6 @@
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
     <hr />
-    <audio controls autoplay ontimeupdate="console.log('progress')">
-      <source src="https://jumbef.net/tdw/musique/Light%20be%20born%20out%20of%20dark/01%20Welcom%20in%20a%20dark%20world.mp3" type="audio/mpeg" />
-      <source src="file:///absolute/path/to/file.mp3" type="audio/mpeg" />
-      <source src="file:///absolute/path/to/file.ogg" type="audio/ogg" />
-      <source src="file:///absolute/path/to/file.flac" type="audio/flac" />
-      <source src="file:///absolute/path/to/file.wav" type="audio/wav" />
-    </audio>
+    <audio id="audio" controls ontimeupdate="ipcRenderer.send('progress',this.currentTime)" src=""></audio>
     </body>
 </html>

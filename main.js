@@ -2,8 +2,11 @@ const electron = require('electron')
 const { app, BrowserWindow } = require('electron')
 const { ipcMain } = require('electron')
 
-function createWindowBack () {
-  const winBack = new BrowserWindow({
+let winBack
+let winfront
+
+app.whenReady().then( () => {
+  winBack = new BrowserWindow({
     width: 1200,
     height: 900,
     autoHideMenuBar:true,
@@ -11,13 +14,7 @@ function createWindowBack () {
       nodeIntegration: true
     }
   })
-
-  // et charger le fichier index.html de l'application.
-  winBack.loadFile('html/winBack.html')
-}
-function createWindowFront () {
-  // Cree la fenetre du navigateur.
-  const winFront = new BrowserWindow({
+  winFront = new BrowserWindow({
     width: 800,
     height: 600,
     autoHideMenuBar:true,
@@ -26,22 +23,33 @@ function createWindowFront () {
     }
   })
 
-  // et charger le fichier index.html de l'application.
+  // Charger le fichier index.html de l'application.
+  winBack.loadFile('html/winBack.html')
   winFront.loadFile('html/winFront.html')
-}
-function createWindows () {
-  createWindowBack()
-  createWindowFront()
-}
 
-app.whenReady().then(createWindows)
+  winBack.addListener('close',(evt) =>{
+    evt.preventDefault()
+    app.exit()
+  })
+  winFront.addListener('close',(evt) =>{
+    evt.preventDefault()
+  })
+})
 
-ipcMain.on('close-app', (evt, arg) => {
-  app.quit()
+
+ipcMain.on('exit', (evt, arg) => {
+  app.exit()
 })
-ipcMain.on('open-front', (evt, arg) => {
-  createWindowFront()
-  for (window of BrowserWindow.getAllWindows()) {
-    window.webContents.send('log','New Front window')
-  }
+ipcMain.on('load', (evt, arg) => {
+  winFront.webContents.send('load',arg)
 })
+ipcMain.on('play', (evt, arg) => {
+  winFront.webContents.send('play')
+})
+ipcMain.on('pause', (evt, arg) => {
+  winFront.webContents.send('pause')
+})
+ipcMain.on('progress', (evt, arg) => {
+  console.log(arg)
+})
+
