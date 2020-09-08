@@ -1,6 +1,8 @@
 const electron = require('electron')
 const { app, BrowserWindow } = require('electron')
 const { ipcMain } = require('electron')
+const { dialog } = require('electron')
+const fs = require('fs');
 
 let winBack
 let winfront
@@ -52,4 +54,17 @@ ipcMain.on('pause', (evt, arg) => {
 ipcMain.on('progress', (evt, arg) => {
   console.log(arg)
 })
-
+ipcMain.on('folder-select', async (event, arg) => {
+  const result = await dialog.showOpenDialog(winBack, {
+    properties: ['openDirectory']
+  })
+  console.log('folder selected', result.filePaths)
+  if (!result.canceled){
+    winBack.webContents.send('folder-selected',result.filePaths[0])
+    fs.readdir(result.filePaths[0], (err, dir) => {
+      for(let filePath of dir){
+        console.log(filePath)
+      }
+    });   
+  }
+})
