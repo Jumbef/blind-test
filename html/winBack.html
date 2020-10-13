@@ -1,26 +1,66 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Jumbef's blind test (Backstage)</title>
-    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <script>
-      const { ipcRenderer } = require('electron')
-      ipcRenderer.on('log', (event, message) => {
-        console.log(message)
-      })
-      ipcRenderer.on('folder-selected', (event, message) => {
-        document.getElementById('folder-selected').innerText = message
-      })
-    </script>
-  </head>
-  <body>
-    <input type="button" value="Select folder" onclick="ipcRenderer.send('folder-select')">
-    <span id='folder-selected'></span>
-    <hr>
-    <input type="button" value="Load" onclick="ipcRenderer.send('load','https://jumbef.net/tdw/musique/Light%20be%20born%20out%20of%20dark/01%20Welcom%20in%20a%20dark%20world.mp3')">
-    <input type="button" value="PLay" onclick="ipcRenderer.send('play')">
-    <input type="button" value="Stop" onclick="ipcRenderer.send('pause')">
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Jumbef's blind test (Backstage)</title>
+  <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <style>
+    li.loaded {
+      background-color: skyblue;
+    }
+
+    li.playing {
+      background-color: teal;
+    }
+
+    li.played {
+      background-color: sandybrown;
+    }
+  </style>
+  <script>
+    const { ipcRenderer } = require('electron')
+    let currentId = 'title-0'
+    ipcRenderer.on('log', (event, message) => {
+      console.log(message)
+    })
+    ipcRenderer.on('load', (event, message) => {
+      currentId = message
+      document.getElementById(currentId).setAttribute('class', 'loaded')
+    })
+    ipcRenderer.on('play', (event, message) => {
+      document.getElementById(currentId).setAttribute('class', 'playing')
+    })
+    ipcRenderer.on('stop', (event, message) => {
+      document.getElementById(currentId).setAttribute('class', 'played')
+    })
+    ipcRenderer.on('folder-selected', (event, message) => {
+      document.getElementById('folder-selected').innerText = message
+    })
+    ipcRenderer.on('add-file', (event, message) => {
+      const li = document.createElement("li")
+      li.setAttribute('id', message[0])
+      li.setAttribute('data-filepath', message[1])
+      li.setAttribute('data-filename', message[2])
+      li.innerText = message[2]
+      document.getElementById('playlist').appendChild(li)
+    })
+  </script>
+</head>
+
+<body>
+  <hr>
+  <input type="button" value="Load" onclick="ipcRenderer.send('load')" />
+  <input type="button" value="Play" onclick="ipcRenderer.send('play')" />
+  <input type="button" value="Pause" onclick="ipcRenderer.send('pause')" />
+  <input type="button" value="Stop" onclick="ipcRenderer.send('stop')" />
+  <hr>
+  <input type="button" value="Reset Buzz" onclick="ipcRenderer.send('resetbuzz')" />
+  <hr>
+  <input type="button" value="Select folder" onclick="ipcRenderer.send('folder-select')" />
+  <span id="folder-selected"></span>
+  <ul id="playlist"></ul>
+</body>
+
 </html>

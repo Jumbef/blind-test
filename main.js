@@ -8,8 +8,9 @@ const http = require('http')
 
 let winBack
 let winfront
-
-
+let buzz = false
+let playlist = []
+let playlistIndex = 0
 
 app.whenReady().then(() => {
   winBack = new BrowserWindow({
@@ -37,9 +38,14 @@ app.whenReady().then(() => {
       });
     res.write('OK\n')
 
-    let number = req.url.match(/\d*$/)
-    if (number[0] > 0) {
-      buzz(number[0])
+    if (!buzz) {
+      let number = req.url.match(/\d*$/)
+      if (number[0] > 0) {
+        buzz = true
+        winBack.webContents.send('buzz', number[0])
+        winFront.webContents.send('buzz', number[0])
+        console.log(number)
+      }
     }
 
     return res.end()
@@ -58,25 +64,38 @@ app.whenReady().then(() => {
   })
 })
 
-function buzz(number) {
-  winFront.webContents.send('buzz', number[0])
-  console.log(number)
-}
 
 ipcMain.on('exit', (evt, arg) => {
   app.exit()
 })
 ipcMain.on('load', (evt, arg) => {
-  winFront.webContents.send('load', arg)
+  winBack.webContents.send('stop')
+  winFront.webContents.send('stop')
+  winBack.webContents.send('load', playlist[playlistIndex][0])
+  winFront.webContents.send('load', playlist[playlistIndex][1])
+  playlistIndex++
+  if (playlistIndex >= playlist.length) { playlistIndex = 0 }
 })
 ipcMain.on('play', (evt, arg) => {
+  winBack.webContents.send('play')
   winFront.webContents.send('play')
 })
+ipcMain.on('stop', (evt, arg) => {
+  winBack.webContents.send('stop')
+  winFront.webContents.send('stop')
+})
 ipcMain.on('pause', (evt, arg) => {
+  winBack.webContents.send('pause')
   winFront.webContents.send('pause')
 })
 ipcMain.on('progress', (evt, arg) => {
   console.log(arg)
+})
+ipcMain.on('resetbuzz', (evt, arg) => {
+  buzz = false
+  winBack.webContents.send('buzz', null)
+  winFront.webContents.send('buzz', null)
+  console.log("Buzzer reset")
 })
 ipcMain.on('folder-select', async (event, arg) => {
   const result = await dialog.showOpenDialog(winBack, {
@@ -86,8 +105,12 @@ ipcMain.on('folder-select', async (event, arg) => {
   if (!result.canceled) {
     winBack.webContents.send('folder-selected', result.filePaths[0])
     fs.readdir(result.filePaths[0], (err, dir) => {
+      let i = 0
       for (let filePath of dir) {
+        winBack.webContents.send('add-file', [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath])
+        playlist[i] = [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath]
         console.log(filePath)
+        i++
       }
     });
   }
