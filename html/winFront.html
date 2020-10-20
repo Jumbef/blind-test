@@ -6,26 +6,10 @@
   <title>Jumbef's blind test</title>
   <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-  <script>
-    const { ipcRenderer } = require('electron')
-    ipcRenderer.on('log', (event, message) => {
-      console.log(message)
-    })
-    ipcRenderer.on('load', (event, message) => {
-      console.log(message)
-      document.getElementById('audio').setAttribute('src', message)
-    })
-    ipcRenderer.on('play', (event, message) => {
-      document.getElementById('audio').play()
-    })
-    ipcRenderer.on('pause', (event, message) => {
-      document.getElementById('audio').pause()
-    })
-    ipcRenderer.on('stop', (event, message) => {
-      document.getElementById('audio').pause()
-      //document.getElementById('audio').stop()
-    })
-  </script>
+  <link href="../css/common.css" rel="stylesheet" />
+  <link href="../css/winFront.css" rel="stylesheet" />
+  <script src="../js/common.js"></script>
+  <script src="../js/winFront.js"></script>
 </head>
 
 <body>

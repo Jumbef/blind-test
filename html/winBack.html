@@ -6,46 +6,11 @@
   <title>Jumbef's blind test (Backstage)</title>
   <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-  <style>
-    li.loaded {
-      background-color: skyblue;
-    }
-
-    li.playing {
-      background-color: teal;
-    }
-
-    li.played {
-      background-color: sandybrown;
-    }
-  </style>
+  <link href="../css/common.css" rel="stylesheet" />
+  <link href="../css/winBack.css" rel="stylesheet" />
+  <script src="../js/common.js"></script>
+  <script src="../js/winBack.js"></script>
   <script>
-    const { ipcRenderer } = require('electron')
-    let currentId = 'title-0'
-    ipcRenderer.on('log', (event, message) => {
-      console.log(message)
-    })
-    ipcRenderer.on('load', (event, message) => {
-      currentId = message
-      document.getElementById(currentId).setAttribute('class', 'loaded')
-    })
-    ipcRenderer.on('play', (event, message) => {
-      document.getElementById(currentId).setAttribute('class', 'playing')
-    })
-    ipcRenderer.on('stop', (event, message) => {
-      document.getElementById(currentId).setAttribute('class', 'played')
-    })
-    ipcRenderer.on('folder-selected', (event, message) => {
-      document.getElementById('folder-selected').innerText = message
-    })
-    ipcRenderer.on('add-file', (event, message) => {
-      const li = document.createElement("li")
-      li.setAttribute('id', message[0])
-      li.setAttribute('data-filepath', message[1])
-      li.setAttribute('data-filename', message[2])
-      li.innerText = message[2]
-      document.getElementById('playlist').appendChild(li)
-    })
   </script>
 </head>
 

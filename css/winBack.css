@@ -1,0 +1,11 @@
+    li.loaded {
+      background-color: skyblue;
+    }
+
+    li.playing {
+      background-color: teal;
+    }
+
+    li.played {
+      background-color: sandybrown;
+    }
