@@ -5,6 +5,7 @@ const { ipcMain } = require('electron')
 const { dialog } = require('electron')
 const fs = require('fs');
 const http = require('http')
+const { shell } = require('electron')
 
 let winBack
 let winfront
@@ -97,6 +98,12 @@ ipcMain.on('resetbuzz', (evt, arg) => {
   winFront.webContents.send('buzz', null)
   console.log("Buzzer reset")
 })
+
+ipcMain.on('open-link', (evt, arg) => {
+  shell.openExternal(arg)
+})
+
+
 ipcMain.on('folder-select', async (event, arg) => {
   const result = await dialog.showOpenDialog(winBack, {
     properties: ['openDirectory']

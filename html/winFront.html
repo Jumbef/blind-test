@@ -14,6 +14,11 @@
 
 <body>
   <audio id="audio" controls ontimeupdate="ipcRenderer.send('progress',this.currentTime)" src=""></audio>
+  <hr>
+  <div id="licences">
+    App icon is derivated work from <a href="" onclick="ipcRenderer.send('open-link','https://www.flaticon.com/authors/freepik')" title="Freepik">Freepik</a> from <a href="" onclick="ipcRenderer.send('open-link','https://www.flaticon.com/')" title="Flaticon"> www.flaticon.com</a><br />
+  </div>
 </body>
 
 </html>
+
