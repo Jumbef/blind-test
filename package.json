@@ -7,12 +7,12 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
-},
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jumbef/blind-test.git"
   },
-  "author":{
+  "author": {
     "name": "Jumbef",
     "email": "jb.faucheron@gmail.com",
     "url": "https://jumbef.net/"
@@ -29,16 +29,23 @@
   "build": {
     "appId": "net.jumbef.blind-test",
     "mac": {
-      "target":["dmg"],
+      "target": [
+        "dmg"
+      ],
       "category": "public.app-category.games"
     },
-    "win" :{
-      "target":["nsis","portable"],
-      "icon":"build/icon.ico"
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
     },
-    "linux":{
-      "target":["AppImage"],
-      "category":"Game"
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "build/icon.svg"
     }
   }
 }
