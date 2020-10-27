@@ -1,26 +1,40 @@
 const { ipcRenderer } = require('electron')
 let currentId = 'title-0'
-ipcRenderer.on('log', (event, message) => {
-    console.log(message)
+
+ipcRenderer.on('log', (evt, arg) => {
+    console.log(arg)
 })
-ipcRenderer.on('load', (event, message) => {
-    currentId = message
-    document.getElementById(currentId).setAttribute('class', 'loaded')
+ipcRenderer.on('event', (evt, arg) => {
+    switch (arg.name) {
+        case 'folder-selected':
+            document.getElementById('folder-selected').innerText = arg.params[0]
+            break
+    }
 })
-ipcRenderer.on('play', (event, message) => {
-    document.getElementById(currentId).setAttribute('class', 'playing')
+
+ipcRenderer.on('command', (evt, arg) => {
+    switch (arg.name) {
+        case 'load':
+            currentId = arg.params[0]
+            document.getElementById(currentId).setAttribute('class', 'loaded')
+            break
+        case 'play':
+            document.getElementById(currentId).setAttribute('class', 'playing')
+            break
+        case 'stop':
+            document.getElementById(currentId).setAttribute('class', 'played')
+            break
+        case 'add-file':
+            const li = document.createElement("li")
+            li.setAttribute('id', arg.params[0])
+            li.setAttribute('data-filepath', arg.params[1])
+            li.setAttribute('data-filename', arg.params[2])
+            li.innerText = arg.params[2]
+            document.getElementById('playlist').appendChild(li)
+            break
+
+        default:
+            break;
+    }
 })
-ipcRenderer.on('stop', (event, message) => {
-    document.getElementById(currentId).setAttribute('class', 'played')
-})
-ipcRenderer.on('folder-selected', (event, message) => {
-    document.getElementById('folder-selected').innerText = message
-})
-ipcRenderer.on('add-file', (event, message) => {
-    const li = document.createElement("li")
-    li.setAttribute('id', message[0])
-    li.setAttribute('data-filepath', message[1])
-    li.setAttribute('data-filename', message[2])
-    li.innerText = message[2]
-    document.getElementById('playlist').appendChild(li)
-})
+

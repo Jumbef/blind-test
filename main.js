@@ -43,8 +43,8 @@ app.whenReady().then(() => {
       let number = req.url.match(/\d*$/)
       if (number[0] > 0) {
         buzz = true
-        winBack.webContents.send('buzz', number[0])
-        winFront.webContents.send('buzz', number[0])
+        winBack.webContents.send('command', { name: 'buzz', params: [number[0]] })
+        winFront.webContents.send('command', { name: 'buzz', params: [number[0]] })
         console.log(number)
       }
     }
@@ -72,32 +72,32 @@ ipcMain.on('command', async (evt, arg) => {
       app.exit()
       break
     case 'load':
-      winBack.webContents.send('stop')
-      winFront.webContents.send('stop')
-      winBack.webContents.send('load', playlist[playlistIndex][0])
-      winFront.webContents.send('load', playlist[playlistIndex][1])
+      winBack.webContents.send('command', { name: 'stop' })
+      winFront.webContents.send('command', { name: 'stop' })
+      winBack.webContents.send('command', { name: 'load', params: [playlist[playlistIndex][0]] })
+      winFront.webContents.send('command', { name: 'load', params: [playlist[playlistIndex][1]] })
       playlistIndex++
       if (playlistIndex >= playlist.length) { playlistIndex = 0 }
       break
     case 'play':
-      winBack.webContents.send('play')
-      winFront.webContents.send('play')
+      winBack.webContents.send('command', { name: 'play' })
+      winFront.webContents.send('command', { name: 'play' })
       break;
     case 'stop':
-      winBack.webContents.send('stop')
-      winFront.webContents.send('stop')
+      winBack.webContents.send('command', { name: 'stop' })
+      winFront.webContents.send('command', { name: 'stop' })
       break
     case 'pause':
-      winBack.webContents.send('pause')
-      winFront.webContents.send('pause')
+      winBack.webContents.send('command', { name: 'pause' })
+      winFront.webContents.send('command', { name: 'pause' })
       break
     case 'progress':
       console.log(arg)
       break
     case 'resetbuzz':
       buzz = false
-      winBack.webContents.send('buzz', null)
-      winFront.webContents.send('buzz', null)
+      winBack.webContents.send('command', { name: 'buzz' })
+      winFront.webContents.send('command', { name: 'buzz' })
       console.log("Buzzer reset")
       break
     case 'open-link':
@@ -110,11 +110,11 @@ ipcMain.on('command', async (evt, arg) => {
       })
       console.log('folder selected', result.filePaths)
       if (!result.canceled) {
-        winBack.webContents.send('folder-selected', result.filePaths[0])
+        winBack.webContents.send('event', { name: 'folder-selected', params: [result.filePaths[0]] })
         fs.readdir(result.filePaths[0], (err, dir) => {
           let i = 0
           for (let filePath of dir) {
-            winBack.webContents.send('add-file', [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath])
+            winBack.webContents.send('command', { name: 'add-file', params: [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath] })
             playlist[i] = [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath]
             console.log(filePath)
             i++
@@ -129,7 +129,7 @@ ipcMain.on('command', async (evt, arg) => {
 })
 
 
-ipcMain.on('event', (evt, arg) => {
+ipcMain.on('event', async (evt, arg) => {
   switch (arg.name) {
     case 'progress':
       console.log(arg.params[0])
