@@ -1,6 +1,26 @@
 const { ipcRenderer } = require('electron')
 let currentId = 'title-0'
 
+document.onload = () => {
+    document.getElementById('LoadButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'load' })
+    }
+    document.getElementById('PlayButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'play' })
+    }
+    document.getElementById('PauseButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'pause' })
+    }
+    document.getElementById('StopButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'stop' })
+    }
+    document.getElementById('ResetBuzzButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'resetbuzz' })
+    }
+    document.getElementById('SelectFolderButton').onclick = () => {
+        ipcRenderer.send('command', { name: 'folder-select' })
+    }
+}
 ipcRenderer.on('log', (evt, arg) => {
     console.log(arg)
 })

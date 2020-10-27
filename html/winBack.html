@@ -10,20 +10,18 @@
   <link href="../css/winBack.css" rel="stylesheet" />
   <script src="../js/common.js"></script>
   <script src="../js/winBack.js"></script>
-  <script>
-  </script>
 </head>
 
 <body>
   <hr>
-  <input type="button" value="Load" onclick="ipcRenderer.send('command',{name:'load'})" />
-  <input type="button" value="Play" onclick="ipcRenderer.send('command',{name:'play'})" />
-  <input type="button" value="Pause" onclick="ipcRenderer.send('command',{name:'pause'})" />
-  <input type="button" value="Stop" onclick="ipcRenderer.send('command',{name:'stop'})" />
+  <input type="button" id="LoadButton" value="Load" />
+  <input type="button" id="PlayButton" value="Play" />
+  <input type="button" id="PauseButton" value="Pause" />
+  <input type="button" id="StopButton" value="Stop" />
   <hr>
-  <input type="button" value="Reset Buzz" onclick="ipcRenderer.send('command',{name:'resetbuzz'})" />
+  <input type="button" id="ResetBuzzButton" value="Reset Buzz" />
   <hr>
-  <input type="button" value="Select folder" onclick="ipcRenderer.send('command',{name:'folder-select'})" />
+  <input type="button" id="SelectFolderButton" value="Select folder" />
   <span id="folder-selected"></span>
   <ul id="playlist"></ul>
   <hr>
@@ -34,6 +32,7 @@
       onclick="ipcRenderer.send('command',{name:'open-link',params:['https://www.flaticon.com/']})" title="Flaticon">
       www.flaticon.com</a><br />
   </div>
+
 </body>
 
 </html>
