@@ -16,19 +16,23 @@
 
 <body>
   <hr>
-  <input type="button" value="Load" onclick="ipcRenderer.send('load')" />
-  <input type="button" value="Play" onclick="ipcRenderer.send('play')" />
-  <input type="button" value="Pause" onclick="ipcRenderer.send('pause')" />
-  <input type="button" value="Stop" onclick="ipcRenderer.send('stop')" />
+  <input type="button" value="Load" onclick="ipcRenderer.send('command',{name:'load'})" />
+  <input type="button" value="Play" onclick="ipcRenderer.send('command',{name:'play'})" />
+  <input type="button" value="Pause" onclick="ipcRenderer.send('command',{name:'pause'})" />
+  <input type="button" value="Stop" onclick="ipcRenderer.send('command',{name:'stop'})" />
   <hr>
-  <input type="button" value="Reset Buzz" onclick="ipcRenderer.send('resetbuzz')" />
+  <input type="button" value="Reset Buzz" onclick="ipcRenderer.send('command',{name:'resetbuzz'})" />
   <hr>
-  <input type="button" value="Select folder" onclick="ipcRenderer.send('folder-select')" />
+  <input type="button" value="Select folder" onclick="ipcRenderer.send('command',{name:'folder-select'})" />
   <span id="folder-selected"></span>
   <ul id="playlist"></ul>
   <hr>
   <div id="licences">
-    App icon is derivated work from <a href="" onclick="ipcRenderer.send('open-link','https://www.flaticon.com/authors/freepik')" title="Freepik">Freepik</a> from <a href="" onclick="ipcRenderer.send('open-link','https://www.flaticon.com/')" title="Flaticon"> www.flaticon.com</a><br />
+    App icon is derivated work from <a href=""
+      onclick="ipcRenderer.send('command',{name:'open-link',params:['https://www.flaticon.com/authors/freepik']})"
+      title="Freepik">Freepik</a> from <a href=""
+      onclick="ipcRenderer.send('command',{name:'open-link',params:['https://www.flaticon.com/']})" title="Flaticon">
+      www.flaticon.com</a><br />
   </div>
 </body>
 
