@@ -1,60 +1,66 @@
-const { ipcRenderer } = require('electron')
 let currentId = 'title-0'
 
-document.onload = () => {
+window.onload = () => {
     document.getElementById('LoadButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'load' })
+        window.api.send('toMain', { type: 'command', name: 'load' })
     }
     document.getElementById('PlayButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'play' })
+        window.api.send('toMain', { type: 'command', name: 'play' })
     }
     document.getElementById('PauseButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'pause' })
+        window.api.send('toMain', { type: 'command', name: 'pause' })
     }
     document.getElementById('StopButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'stop' })
+        window.api.send('toMain', { type: 'command', name: 'stop' })
     }
     document.getElementById('ResetBuzzButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'resetbuzz' })
+        window.api.send('toMain', { type: 'command', name: 'reset-buzz' })
     }
     document.getElementById('SelectFolderButton').onclick = () => {
-        ipcRenderer.send('command', { name: 'folder-select' })
+        window.api.send('toMain', { type: 'command', name: 'folder-select' })
     }
 }
-ipcRenderer.on('log', (evt, arg) => {
-    console.log(arg)
-})
-ipcRenderer.on('event', (evt, arg) => {
-    switch (arg.name) {
-        case 'folder-selected':
-            document.getElementById('folder-selected').innerText = arg.params[0]
-            break
-    }
-})
 
-ipcRenderer.on('command', (evt, arg) => {
-    switch (arg.name) {
-        case 'load':
-            currentId = arg.params[0]
-            document.getElementById(currentId).setAttribute('class', 'loaded')
-            break
-        case 'play':
-            document.getElementById(currentId).setAttribute('class', 'playing')
-            break
-        case 'stop':
-            document.getElementById(currentId).setAttribute('class', 'played')
-            break
-        case 'add-file':
-            const li = document.createElement("li")
-            li.setAttribute('id', arg.params[0])
-            li.setAttribute('data-filepath', arg.params[1])
-            li.setAttribute('data-filename', arg.params[2])
-            li.innerText = arg.params[2]
-            document.getElementById('playlist').appendChild(li)
-            break
 
+window.api.receive("fromMain", (data) => {
+    switch (data.type) {
+        case 'log':
+            console.log(data)
+            break
+        case 'event':
+            switch (data.name) {
+                case 'folder-selected':
+                    document.getElementById('folder-selected').innerText = data.params[0]
+                    break
+            }
+            break
+        case 'command':
+            switch (data.name) {
+                case 'load':
+                    currentId = data.params[0]
+                    document.getElementById(currentId).setAttribute('class', 'loaded')
+                    break
+                case 'play':
+                    document.getElementById(currentId).setAttribute('class', 'playing')
+                    break
+                case 'stop':
+                    document.getElementById(currentId).setAttribute('class', 'played')
+                    break
+                case 'add-file':
+                    const li = document.createElement("li")
+                    li.setAttribute('id', data.params[0])
+                    li.setAttribute('data-filepath', data.params[1])
+                    li.setAttribute('data-filename', data.params[2])
+                    li.innerText = data.params[2]
+                    document.getElementById('playlist').appendChild(li)
+                    break
+
+                default:
+                    break
+            }
+
+            break
         default:
-            break;
+            break
     }
 })
-

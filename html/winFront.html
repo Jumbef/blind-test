@@ -8,19 +8,18 @@
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
   <link href="../css/common.css" rel="stylesheet" />
   <link href="../css/winFront.css" rel="stylesheet" />
-  <script src="../js/common.js"></script>
   <script src="../js/winFront.js"></script>
 </head>
 
 <body>
-  <audio id="audio" controls ontimeupdate="ipcRenderer.send('event',{name:'progress',params:[this.currentTime]})"
+  <audio id="audio" controls ontimeupdate="window.api.send('toMain',{type:'event',name:'progress',params:[this.currentTime]})"
     src=""></audio>
   <hr>
   <div id="licences">
     App icon is derivated work from <a href=""
-      onclick="ipcRenderer.send('command',{name:'open-link',params:['https://www.flaticon.com/authors/freepik']})"
+      onclick="window.api.send('toMain',{type:'command',name:'open-link',params:['https://www.flaticon.com/authors/freepik']})"
       title="Freepik">Freepik</a> from <a href=""
-      onclick="ipcRenderer.send('command',{name:'open-link',params:['https://www.flaticon.com/']})" title="Flaticon">
+      onclick="window.api.send('toMain',{type:'command',name:'open-link',params:['https://www.flaticon.com/']})" title="Flaticon">
       www.flaticon.com</a><br />
   </div>
 </body>

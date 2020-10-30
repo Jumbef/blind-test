@@ -1,8 +1,9 @@
 {
   "name": "blind-test",
   "version": "0.1.0",
-  "description": "",
+  "description": "Blind test management tool",
   "main": "main.js",
+  "icon": "build/icon-128px.png",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
@@ -23,7 +24,7 @@
   },
   "homepage": "https://github.com/Jumbef/blind-test#readme",
   "devDependencies": {
-    "electron": "^10.1.1",
+    "electron": "^10.1.5",
     "electron-builder": "^22.9.1"
   },
   "build": {
