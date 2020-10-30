@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Blind test management tool",
   "main": "main.js",
-  "icon": "build/icon-128px.png",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
