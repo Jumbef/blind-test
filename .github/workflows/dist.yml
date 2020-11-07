@@ -19,6 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - env: GH_TOKEN = ${{ secrets.GITHUB_TOKEN }}
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
@@ -29,7 +30,9 @@ jobs:
           node-version: '10.x'
       - name: Install Dependencies
         run: npm install
-      - name: Install Dependencies
+
+
+      - name: Run dist script
         run: npm run dist
 
       # Runs a single command using the runners shell
