@@ -6,7 +6,9 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "always":"build",
+    "release":"build"
   },
   "repository": {
     "type": "git",
@@ -29,14 +31,12 @@
   "build": {
     "appId": "net.jumbef.blind-test",
     "mac": {
-      "publish":"always",
       "target": [
         "dmg"
       ],
       "category": "public.app-category.games"
     },
     "win": {
-      "publish":"always",
       "target": [
         "nsis",
         "portable"
@@ -44,7 +44,6 @@
       "icon": "build/icon.ico"
     },
     "linux": {
-      "publish":"always",
       "target": [
         "AppImage"
       ],
