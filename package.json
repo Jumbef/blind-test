@@ -2,13 +2,11 @@
   "name": "blind-test",
   "version": "0.1.0",
   "description": "Blind test management tool",
-  "main": "js/main.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --publish always",
-    "always":"build",
-    "release":"build"
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",

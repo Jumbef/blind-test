@@ -6,8 +6,7 @@ const fs = require('fs')
 let winBack
 let winfront
 let buzz = false
-let playlist = []
-let playlistIndex = 0
+const playlist = {}
 
 app.whenReady().then(() => {
   winBack = new BrowserWindow({
@@ -47,8 +46,8 @@ app.whenReady().then(() => {
       let number = req.url.match(/\d*$/)
       if (number[0] > 0) {
         buzz = true
-        winBack.webContents.send('fromMain', { type: 'command', name: 'buzz', params: [number[0]] })
-        winFront.webContents.send('fromMain', { type: 'command', name: 'buzz', params: [number[0]] })
+        winBack.webContents.send('fromMain', { type: 'command', name: 'buzz', params: {number:number[0]} })
+        winFront.webContents.send('fromMain', { type: 'command', name: 'buzz', params: {numbef:number[0]} })
         console.log(number)
       }
     }
@@ -81,10 +80,8 @@ ipcMain.on('toMain', async (evt, data) => {
         case 'load':
           winBack.webContents.send('fromMain', { type: 'command', name: 'stop' })
           winFront.webContents.send('fromMain', { type: 'command', name: 'stop' })
-          winBack.webContents.send('fromMain', { type: 'command', name: 'load', params: [playlist[playlistIndex][0]] })
-          winFront.webContents.send('fromMain', { type: 'command', name: 'load', params: [playlist[playlistIndex][1]] })
-          playlistIndex++
-          if (playlistIndex >= playlist.length) { playlistIndex = 0 }
+          winBack.webContents.send('fromMain', { type: 'command', name: 'load', params: playlist[data.params.fileid] })
+          winFront.webContents.send('fromMain', { type: 'command', name: 'load', params: playlist[data.params.fileid] })
           break
         case 'play':
           winBack.webContents.send('fromMain', { type: 'command', name: 'play' })
@@ -117,13 +114,13 @@ ipcMain.on('toMain', async (evt, data) => {
           }).catch()
           console.log('folder selected', result.filePaths)
           if (!result.canceled) {
-            winBack.webContents.send('fromMain', { type: 'event', name: 'folder-selected', params: [result.filePaths[0]] })
+            winBack.webContents.send('fromMain', { type: 'event', name: 'folder-selected', params: {folderpath:result.filePaths[0]} })
             fs.readdir(result.filePaths[0], (err, dir) => {
-              let i = 0
-              for (let filePath of dir) {
-                winBack.webContents.send('fromMain', { type: 'command', name: 'add-file', params: [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath] })
-                playlist[i] = [`tilte-${i}`, `${result.filePaths[0]}/${filePath}`, filePath]
-                console.log(filePath)
+              let i = 1
+              for (let filename of dir) {
+                playlist[`tilte-${i}`] = {fileid:`tilte-${i}`, filepath:path.join(result.filePaths[0],filename), filename:filename}
+                winBack.webContents.send('fromMain', { type: 'command', name: 'add-file', params: playlist[`tilte-${i}`] })
+                console.log(playlist[`tilte-${i}`])
                 i++
               }
             })
@@ -137,7 +134,7 @@ ipcMain.on('toMain', async (evt, data) => {
     case 'event':
       switch (data.name) {
         case 'progress':
-          console.log(data.params[0])
+          console.log(data.params)
           break
 
         default:
