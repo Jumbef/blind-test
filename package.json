@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/Jumbef/blind-test#readme",
   "devDependencies": {
-    "electron": "10.5.*",
-    "electron-builder": "22.*"
+    "electron": ">=10.5.0",
+    "electron-builder": ">=22.0"
   },
   "build": {
     "appId": "net.jumbef.blind-test",
